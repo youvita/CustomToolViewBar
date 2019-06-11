@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
-import com.customtoolviewbar.tool.ToolViewBar;
+import com.customtoolviewbar.tool.ProgressToolbar;
 
 public class ResultActivity extends BassActivity {
     private int i = 0;
@@ -23,7 +23,7 @@ public class ResultActivity extends BassActivity {
                     @Override
                     public void run() {
                         findViewById(R.id.btn_start).setEnabled(false);
-                        new ToolViewBar().instance().onShowActionBar(ResultActivity.this);
+                        new ProgressToolbar().instance().onShowProgressBar(ResultActivity.this);
                         new CountDownTimer(5000, 1000) {
                             public void onTick(long millisUntilFinished) {
                                 i++;
@@ -33,7 +33,7 @@ public class ResultActivity extends BassActivity {
                             public void onFinish() {
                                 i = 0;
                                 findViewById(R.id.btn_start).setEnabled(true);
-                                new ToolViewBar().instance().onDestroyProgress();
+                                new ProgressToolbar().instance().onDestroyProgressBar();
                             }
                         }.start();
                     }

@@ -1,27 +1,28 @@
 package com.customtoolviewbar;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import com.customtoolviewbar.tool.ProgressToolbar;
 
-import com.customtoolviewbar.tool.ToolViewBar;
-
+@SuppressLint("Registered")
 public class BassActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        new ToolViewBar().instance().getTheme(this);
+        new ProgressToolbar().instance().setProgressBarTheme(this, R.style.AppProgressBarTheme);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        new ToolViewBar().instance()
-                .initToolViewBar(this, "Processing...", 5)
-                .setOnToolViewBarListener(new ToolViewBar.OnToolViewBarListener() {
+        new ProgressToolbar().instance()
+                .initProgressBar(this, "Processing...", 14, android.R.color.white, 5)
+                .setOnProgressBarListener(new ProgressToolbar.OnProgressToolbarListener() {
                     @Override
                     public void onProgressCompleted() {
-                        new ToolViewBar().instance().onHideActionBar(BassActivity.this);
+                        new ProgressToolbar().instance().onHideProgressBar(BassActivity.this);
                 }
         });
     }

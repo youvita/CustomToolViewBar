@@ -2,28 +2,27 @@ package com.customtoolviewbar.tool;
 
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
-import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.customtoolviewbar.R;
 
-public class ToolViewBar {
+public class ProgressToolbar {
     private static boolean mRunning;
     private static ActionBar mActionBar;
-    private static ToolViewBar mInstance;
+    private static ProgressToolbar mInstance;
 
-    private OnToolViewBarListener mListener;
+    private OnProgressToolbarListener mListener;
 
-    public void setOnToolViewBarListener(OnToolViewBarListener listener) {
+    public void setOnProgressBarListener(OnProgressToolbarListener listener) {
         mListener = listener;
     }
 
-    public ToolViewBar instance() {
+    public ProgressToolbar instance() {
         if (mInstance == null) {
-            mInstance = new ToolViewBar();
+            mInstance = new ProgressToolbar();
         }
         return mInstance;
     }
@@ -31,12 +30,13 @@ public class ToolViewBar {
     /*
      * init tool progress bar
      */
-    public ToolViewBar initToolViewBar(AppCompatActivity context, String text, int elevation) {
-        initTitleName(context, text, elevation);
+    public ProgressToolbar initProgressBar(AppCompatActivity context, String text, int size, int color, int elevation) {
+        initTitleName(context, text, size, color, elevation);
+
         if (!isRunning()) {
-            mInstance.onHideActionBar(context);
+            mInstance.onHideProgressBar(context);
         }else {
-            mInstance.onShowActionBar(context);
+            mInstance.onShowProgressBar(context);
         }
         return mInstance;
     }
@@ -44,9 +44,9 @@ public class ToolViewBar {
     /*
      * override theme
      */
-    public void getTheme(AppCompatActivity context) {
+    public void setProgressBarTheme(AppCompatActivity context, int theme_progress) {
         Resources.Theme theme = context.getTheme();
-        theme.applyStyle(R.style.AppProgressBarTheme, true);
+        theme.applyStyle(theme_progress, true);
     }
 
     /*
@@ -60,7 +60,7 @@ public class ToolViewBar {
     /*
      * hide progress bar
      */
-    public void onHideActionBar(AppCompatActivity context) {
+    public void onHideProgressBar(AppCompatActivity context) {
         mActionBar = context.getSupportActionBar();
         if (mActionBar != null) {
             mActionBar.hide();
@@ -71,7 +71,7 @@ public class ToolViewBar {
     /*
      * show progress bar
      */
-    public void onShowActionBar(AppCompatActivity context) {
+    public void onShowProgressBar(AppCompatActivity context) {
         mActionBar = context.getSupportActionBar();
         if (mActionBar != null) {
             mActionBar.show();
@@ -82,7 +82,7 @@ public class ToolViewBar {
     /*
      * destroy progress bar
      */
-    public void onDestroyProgress() {
+    public void onDestroyProgressBar() {
         mListener.onProgressCompleted();
     }
 
@@ -91,15 +91,15 @@ public class ToolViewBar {
      * text: message for progress bar
      * elevation: under line for progress bar (0: no line, other have line by increasing value from 1 up)
      */
-    private void initTitleName(AppCompatActivity context, String text, int elevation) {
+    private void initTitleName(AppCompatActivity context, String text, int size, int color, int elevation) {
         if (context.getSupportActionBar() != null) {
             ActionBar ab = context.getSupportActionBar();
             TextView textview = new TextView(context.getApplicationContext());
             textview.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             textview.setText(text);
-            textview.setTextColor(Color.WHITE);
+            textview.setTextColor(ContextCompat.getColor(context, color));
             textview.setGravity(Gravity.CENTER);
-            textview.setTextSize(10);
+            textview.setTextSize(size);
             ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             ab.setDisplayShowCustomEnabled(true);
             ab.setCustomView(textview);
@@ -107,7 +107,7 @@ public class ToolViewBar {
         }
     }
 
-    public interface OnToolViewBarListener {
+    public interface OnProgressToolbarListener {
         void onProgressCompleted();
     }
 }
